@@ -12,3 +12,16 @@ def apply_classical(original):
             n.addLyric("f")
     
     return classical
+
+def apply_jazz(original):
+    jazz = stream.Stream()
+    jazz.metadata = metadata.Metadata(title="Jazz Version")
+    
+    # Swing rhythm
+    for n in original.recurse().notes:
+        new_n = note.Note(n.pitch)
+        new_n.duration.quarterLength = 0.75 if n.offset % 1 == 0 else 0.25
+        jazz.append(new_n)
+    
+    return jazz
+
