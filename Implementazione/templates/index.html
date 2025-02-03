@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynthAI - Generatore Musicale</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🎹 Transposition Midi Era</h1>
+            <p class="subtitle">Genera musica in pochi secondi</p>
+        </header>
+
+        <div class="genre-grid">
+            <div class="genre-card" data-genre="classical">
+                <div class="genre-icon">🎻</div>
+                <h3>Classico</h3>
+                <p>Armonie tradizionali con tocco moderno</p>
+                <div class="selection-check">✓</div>
+            </div>
+            
+            <div class="genre-card" data-genre="jazz">
+                <div class="genre-icon">🎷</div>
+                <h3>Jazz</h3>
+                <p>Ritmi sincopati e improvvisazioni</p>
+                <div class="selection-check">✓</div>
+            </div>
+            
+            <div class="genre-card" data-genre="blues">
+                <div class="genre-icon">🎸</div>
+                <h3>Blues</h3>
+                <p>Emozioni crude e note soul</p>
+                <div class="selection-check">✓</div>
+            </div>
+        </div>
+
+        <form id="generateForm" method="POST" action="/generate">
+            <input type="hidden" name="genre" id="selectedGenre" required>
+            <button type="submit" class="generate-btn">
+                <span class="btn-text">🎶 Genera Ora</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <div class="loading-overlay">
+            <div class="loader"></div>
+            <p class="loading-text">Creando la tua opera musicale...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.genre-card');
+            const form = document.getElementById('generateForm');
+            const selectedGenre = document.getElementById('selectedGenre');
+
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    cards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    card.style.transform = 'scale(0.98)';
+                    setTimeout(() => card.style.transform = '', 200);
+                    selectedGenre.value = card.dataset.genre;
+                });
+            });
+
+            form.addEventListener('submit', (e) => {
+                if (!selectedGenre.value) {
+                    e.preventDefault();
+                    cards.forEach(c => c.animate([
+                        { transform: 'translateX(0)' },
+                        { transform: 'translateX(10px)' },
+                        { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(0)' }
+                    ], { duration: 400 }));
+                    return;
+                }
+                document.querySelector('.loading-overlay').style.display = 'flex';
+            });
+        });
+    </script>
+</body>
+</html>
