@@ -59,3 +59,9 @@ def generate_midi():
     except Exception as e:
         return render_template('error.html', error=str(e))
 
+@app.route('/generated/<filename>')
+def serve_midi(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
