@@ -2,7 +2,7 @@
 
 ## Introduzione
 
-Questa applicazione web utilizza il framework **Flask** e la libreria **music21** per generare e manipolare composizioni musicali in formato MIDI. L'utente può scegliere tra tre generi musicali (Classico, Jazz, Blues) e generare automaticamente una melodia in uno di questi stili. Il sistema crea sia una versione originale della melodia che una versione modificata secondo il genere scelto, fornendo infine un link per scaricare i file MIDI generati.
+Questa applicazione web utilizza il framework **Flask** e la libreria **music21** per generare composizioni musicali in formato MIDI. L'utente può scegliere tra tre generi musicali (Classico, Jazz, Blues) e generare automaticamente una melodia in uno di questi stili. Il sistema crea sia una versione originale della melodia che una versione modificata secondo il genere scelto, fornendo infine un link per scaricare i file MIDI generati.
 
 L'applicazione permette di esplorare come la musica possa essere trasformata attraverso algoritmi di composizione automatica, con la possibilità di ascoltare e scaricare i risultati in formato MIDI.
 
