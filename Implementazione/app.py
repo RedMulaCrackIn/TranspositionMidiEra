@@ -22,3 +22,8 @@ def generate_base_melody():
         s.append(n)
     
     return s
+
+def save_midi(stream_obj, filename):
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    stream_obj.write('midi', fp=path)
+    return path
