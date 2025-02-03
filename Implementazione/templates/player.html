@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Player - SynthAI</title>
+    <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🎵 {{ genre }} Player</h1>
+            <p class="subtitle">Goditi la tua creazione musicale</p>
+        </header>
+
+        <div class="player-container">
+            <div class="track">
+                <h3><i class="fas fa-music"></i> Originale</h3>
+                <button class="play-btn" onclick="togglePlay('original')">
+                    <i class="fas fa-play"></i>
+                    <span>Riproduci</span>
+                </button>
+                <div class="waveform"></div>
+            </div>
+
+            <div class="track">
+                <h3><i class="fas fa-star"></i> {{ genre }} Version</h3>
+                <button class="play-btn" onclick="togglePlay('processed')">
+                    <i class="fas fa-play"></i>
+                    <span>Riproduci</span>
+                </button>
+                <div class="waveform"></div>
+            </div>
+        </div>
+
+        <a href="/" class="generate-btn" style="text-decoration: none; margin-top: 2rem;">
+            <i class="fas fa-sync"></i> Nuova Generazione
+        </a>
+    </div>
+
+    <script>
+        const player = new mm.SoundFontPlayer('https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus');
+        let currentPlayer = null;
+
+        async function togglePlay(type) {
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('i');
+            
+            if(btn.classList.contains('playing')) {
+                player.stop();
+                btn.classList.remove('playing');
+                icon.className = 'fas fa-play';
+                return;
+            }
+
+            btn.classList.add('loading');
+            icon.className = 'fas fa-spinner fa-pulse';
+
+            try {
+                const url = type === 'original' 
+                    ? "{{ url_for('serve_midi', filename=original) }}" 
+                    : "{{ url_for('serve_midi', filename=processed) }}";
+
+                const response = await fetch(url);
+                const midiData = await response.arrayBuffer();
+                const sequence = await mm.midiToSequenceProto(midiData);
+
+                player.start(sequence);
+                btn.classList.add('playing');
+                icon.className = 'fas fa-pause';
+            } catch (error) {
+                console.error('Errore:', error);
+            } finally {
+                btn.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>
