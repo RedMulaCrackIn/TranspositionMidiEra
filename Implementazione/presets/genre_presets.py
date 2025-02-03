@@ -25,3 +25,19 @@ def apply_jazz(original):
     
     return jazz
 
+def apply_blues(original):
+    blues = original.transpose(-2)
+    blues.metadata.title = "Blues Version"
+    
+    # Blue notes
+    for n in blues.recurse().notes:
+        if n.pitch.midi == 64:  # Mi naturale
+            n.pitch.transpose(-1, inPlace=True)
+    
+    return blues
+
+GENRE_FUNCTIONS = {
+    'classical': apply_classical,
+    'jazz': apply_jazz,
+    'blues': apply_blues
+}
