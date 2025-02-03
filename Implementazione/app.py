@@ -27,3 +27,35 @@ def save_midi(stream_obj, filename):
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     stream_obj.write('midi', fp=path)
     return path
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/generate', methods=['POST'])
+def generate_midi():
+    try:
+        genre = request.form.get('genre', '').lower()
+        if genre not in GENRE_FUNCTIONS:
+            return render_template('error.html', error="Seleziona un genere valido")
+
+        # Genera e processa
+        base_stream = generate_base_melody()
+        processed_stream = GENRE_FUNCTIONS[genre](base_stream)
+        
+        # Salva i file
+        original_filename = f"original_{random.randint(1000,9999)}.mid"
+        processed_filename = f"processed_{random.randint(1000,9999)}.mid"
+        
+        save_midi(base_stream, original_filename)
+        save_midi(processed_stream, processed_filename)
+
+        return render_template('player.html',
+                             original=original_filename,
+                             processed=processed_filename,
+                             genre=genre.capitalize())
+
+    except Exception as e:
+        return render_template('error.html', error=str(e))
+
