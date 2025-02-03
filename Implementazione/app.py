@@ -28,7 +28,6 @@ def save_midi(stream_obj, filename):
     stream_obj.write('midi', fp=path)
     return path
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
